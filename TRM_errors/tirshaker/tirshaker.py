@@ -3,7 +3,6 @@
 #Program to run tirshaker
 from omegaconf import OmegaConf
 import os
-import sys
 import copy
 import psutil as psu
 import random
@@ -141,7 +140,7 @@ def get_groups(in_groups, var_index = {}, no_rings = 3, log = False, verbose=Tru
         group_dict[current_parameter] = {'COLUMN_ID': i}
         disks = parameter[0].split('_')
         try:
-            group_dict[current_parameter]['DISKS'] =  [int(disks[1])]  
+            group_dict[current_parameter]['DISKS'] =  [int(float(disks[1]))]  
             current_disk = disks[1]
         except IndexError:
             group_dict[current_parameter]['DISKS'] =  [1] 
@@ -163,12 +162,12 @@ def get_groups(in_groups, var_index = {}, no_rings = 3, log = False, verbose=Tru
                 if part[0].isnumeric():
                     if start_ring == 0:
                         if ':' in part:
-                            in_rings = [int(x) for x in part.split(':')]
+                            in_rings = [int(float(x)) for x in part.split(':')]
                             if in_rings.sort():
                                 in_rings.sort()
                             start_ring = in_rings[0]
                         else:
-                            start_ring = int(part)
+                            start_ring = int(float(part))
                     last = False
                     try: 
                         if parameter[i+2][0].isnumeric():
@@ -181,12 +180,12 @@ def get_groups(in_groups, var_index = {}, no_rings = 3, log = False, verbose=Tru
 
                     if last:
                         if ':' in part:
-                            in_rings = [int(x) for x in part.split(':')]
+                            in_rings = [int(float(x)) for x in part.split(':')]
                             if in_rings.sort():
                                 in_rings.sort()
                             in_rings = np.array([start_ring,in_rings[-1]],dtype=int)      
                         else:
-                            in_rings = np.array([int(start_ring),int(part)])
+                            in_rings = np.array([start_ring,int(float(part))],dtype=int)
 
                         if current_disk not in group_dict[current_parameter]['RINGS']:
                             group_dict[current_parameter]['RINGS'][current_disk] = in_rings
@@ -205,7 +204,7 @@ def get_groups(in_groups, var_index = {}, no_rings = 3, log = False, verbose=Tru
                     start_ring = 0
                     disks = part.split('_')
                     try:
-                        group_dict[current_parameter]['DISKS'].append(int(disks[1]))
+                        group_dict[current_parameter]['DISKS'].append(int(float(disks[1])))
                         current_disk = disks[1]
                     except IndexError:
                         group_dict[current_parameter]['DISKS'].append(1)  
@@ -421,11 +420,11 @@ def run_tirific(current_run, work_dir = os.getcwd(),deffile = 'tirific.def' ,tir
         if tmp[0] == 'L':
             if not triggered:
                 triggered = True
-            if int(tmp[1]) != currentloop and verbose:
+            if int(float(tmp[1])) != currentloop and verbose:
                 print(f"\r{'':8s}RUN_TIRIFIC: {set_limits(float(tmp[1])-1.,0.,float(max_loop))/float(max_loop)*100.:.1f} % Completed", end =" ",flush = True)
-            currentloop  = int(tmp[1])
+            currentloop  = int(float(tmp[1]))
             if max_loop == 0:
-                max_loop = int(tmp[2])
+                max_loop = int(float(tmp[2]))
  
 
         if tmp[0].strip() == 'Finished':
@@ -522,7 +521,7 @@ def set_individual_iteration(Tirific_Template, i,fit_groups, directory,tirific_c
     Current_Template = copy.deepcopy(Tirific_Template)
     Current_Template['RESTARTID']= i
     Current_Template['TIRDEF'] = name_out
-    nur = int(Current_Template['NUR'])
+    nur = int(float(Current_Template['NUR']))
     # Provide some info where we are
     if verbose:
         log_statement += print_log(f'''
@@ -681,7 +680,7 @@ def prepare_template(cfg, log=False,verbose=True):
     if cfg.tirshaker.mode == 'fitted':
         fit_groups = get_fitted_groups(Tirific_Template,verbose=cfg.general.verbose)
     elif cfg.tirshaker.mode == 'manual':
-        fit_groups = get_manual_groups(cfg, rings = int(Tirific_Template['NUR']),\
+        fit_groups = get_manual_groups(cfg, rings = int(float(Tirific_Template['NUR'])),\
                             cube_name = Tirific_Template['INSET'],verbose=cfg.general.verbose)
         #!!!!!!!!!!!!!!!!!!!!!!!!For this to wrok properly we should set the fitting parameters to the template
     else:
@@ -703,10 +702,10 @@ def prepare_template(cfg, log=False,verbose=True):
     if cfg.general.multiprocessing:
         processes = 1
         tmpcpu = cfg.general.ncpu
-        tmpcpu -= int(Tirific_Template['NCORES'])
-        while  tmpcpu  >= int(Tirific_Template['NCORES']):
+        tmpcpu -= int(float(Tirific_Template['NCORES']))
+        while  tmpcpu  >= int(float(Tirific_Template['NCORES'])):
             processes += 1
-            tmpcpu  -= int(Tirific_Template['NCORES'])
+            tmpcpu  -= int(float(Tirific_Template['NCORES']))
         if processes == 1:
            Tirific_Template['NCORES'] = f'{cfg.general.ncpu}' 
 
