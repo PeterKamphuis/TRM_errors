@@ -10,8 +10,8 @@ project = 'TRM_errors'
 copyright = '2023, P. Kamphuis'
 author = 'P. Kamphuis'
 
-release = '0.0'
-version = '0.1.1'
+release = '0.1.2'
+version = '0.1.2'
 
 # -- General configuration
 
