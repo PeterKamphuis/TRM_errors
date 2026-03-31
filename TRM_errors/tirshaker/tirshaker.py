@@ -693,11 +693,11 @@ def prepare_template(cfg, log=False,verbose=True):
     
 
     
-    if cfg.general.input_cube == None:
+    if cfg.general.cube_name == None:
         #We assume the cube path is in inset
         Tirific_Template['INSET'] = f"../{Tirific_Template['INSET']}"
     else:
-        Tirific_Template['INSET'] = f"{cfg.general.input_cube}"
+        Tirific_Template['INSET'] = f"{cfg.general.cube_name}"
 
     if cfg.general.multiprocessing:
         processes = 1

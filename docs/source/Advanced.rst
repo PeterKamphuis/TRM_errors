@@ -100,14 +100,24 @@ General input
 ---------------------------------
 *(general.command=)*
 
+    **cube_name**
+    
+     *Optional[str] = None*
+
+    The name of the cube to be used in the input def file. If not provided it taken from the input def file. If a single file name it is assumed to be in the main directory.
+
     **ncpu**
     
     *int = cpu_count()-1*
+
+    Number of cpu to use for multiprocessing, default is all but one. If set to 1 then multiprocessing is turned off.
     
     **directory**
     
     *str = os.getcwd()*
 
+    Main directory where the input def file is located and where the output will be stored. If not provided it is assumed to be the current working directory.
+    
     **verbose**
     
     *bool = True*
@@ -118,15 +128,13 @@ General input
 
     *str =  'mad'
 
-    anylis of the output, mad provides a filtered std over the iterations, 'fat' includes the difference beteen the final output and the median output in the itreations into the calculation. 
+    analysis of the output, mad provides a filtered std over the iterations, 'fat' includes the difference beteen the final output and the median output in the itreations into the calculation. 
 
     **multiprocessing**
     
     *bool = True*
     
-    **font_file**
-    
-    *str = "/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf"*
+    Use multiple cpus
 
     **clean**
 
